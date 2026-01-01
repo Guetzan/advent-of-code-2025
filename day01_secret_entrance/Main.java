@@ -1,13 +1,19 @@
 package day01_secret_entrance;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        String[] directions = {"L", "L", "R", "L", "R", "L", "L", "L", "R", "L"};
-        int[] distances = {68, 30, 48, 5, 60, 55, 1, 99, 14, 82};
-    
+        String file = "input.txt";
+        InputParser parser = new InputParser(file);
+
+        parser.parse();
+
+        ArrayList<String> directions = parser.getDirections();
+        ArrayList<Integer> distances = parser.getDistances();
+
         Dial dial = new Dial(50);
-    
         dial.rotate(directions, distances);
-        System.out.println(dial.getCurrentPosition());
+
+        System.out.println("ANSWER: " + dial.getAnswer());
     }
 }

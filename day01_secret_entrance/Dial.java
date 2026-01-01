@@ -1,38 +1,48 @@
 package day01_secret_entrance;
+import java.util.ArrayList;
 
 public class Dial {
     private int currentPosition;
-    private int totalPositions = 100; //do 0 ao 99
+    private int pointedAtZero;
 
     public Dial(int currentPosition) {
         this.currentPosition = currentPosition;
+        this.pointedAtZero = 0;
     }
 
-    public void rotate(String[] directions, int[] distances) {
-        for(int index = 0; index < directions.length; index++) {
-            for(int clicks = 0; clicks < distances[index]; clicks++) {
-                if(directions[index].equals("R")) {
+    public void rotate(ArrayList<String> directions, ArrayList<Integer> distances) {
+        for(int index = 0; index < directions.size(); index++) {
+            if(directions.get(index).equals("R")) {
+                for(int clicks = 0; clicks < distances.get(index); clicks++) {
                     this.currentPosition++;
 
                     if(this.currentPosition > 99) {
                         this.currentPosition = 0;
-                        continue;
                     }
                 }
+            }
 
-                if(directions[index].equals("L")) {
+            if(directions.get(index).equals("L")) {
+                for(int clicks = 0; clicks < distances.get(index); clicks++) {
                     this.currentPosition--;
 
                     if(this.currentPosition < 0) {
                         this.currentPosition = 99;
-                        continue;
                     }
-                }                
+                }
+            }
+            
+            if(this.currentPosition == 0) {
+                this.pointedAtZero++;
             }
         }
     }
 
     public int getCurrentPosition() {
         return this.currentPosition;
+    }
+
+    public int getAnswer() {
+        return this.pointedAtZero;
     }
 }
