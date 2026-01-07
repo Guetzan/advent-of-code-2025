@@ -14,6 +14,7 @@ public class Main {
         Dial dial = new Dial(50);
         dial.rotate(directions, distances);
 
-        System.out.println("ANSWER: " + dial.getAnswer());
+        System.out.println("STOPPED AT ZERO: " + dial.getStoppedAtZero());
+        System.out.println("POINTED AT ZERO: " + dial.getPointedAtZero());
     }
 }

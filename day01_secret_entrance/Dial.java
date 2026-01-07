@@ -3,10 +3,12 @@ import java.util.ArrayList;
 
 public class Dial {
     private int currentPosition;
+    private int stoppedAtZero;
     private int pointedAtZero;
 
     public Dial(int currentPosition) {
         this.currentPosition = currentPosition;
+        this.stoppedAtZero = 0;
         this.pointedAtZero = 0;
     }
 
@@ -18,6 +20,7 @@ public class Dial {
 
                     if(this.currentPosition > 99) {
                         this.currentPosition = 0;
+                        this.pointedAtZero++;
                     }
                 }
             }
@@ -26,6 +29,10 @@ public class Dial {
                 for(int clicks = 0; clicks < distances.get(index); clicks++) {
                     this.currentPosition--;
 
+                    if(this.currentPosition == 0) {
+                        this.pointedAtZero++;
+                    }
+
                     if(this.currentPosition < 0) {
                         this.currentPosition = 99;
                     }
@@ -33,7 +40,7 @@ public class Dial {
             }
             
             if(this.currentPosition == 0) {
-                this.pointedAtZero++;
+                this.stoppedAtZero++;
             }
         }
     }
@@ -42,7 +49,11 @@ public class Dial {
         return this.currentPosition;
     }
 
-    public int getAnswer() {
+    public int getStoppedAtZero() {
+        return this.stoppedAtZero;
+    }
+
+    public int getPointedAtZero() {
         return this.pointedAtZero;
     }
 }
