@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        String file = "input.txt";
+        String file = "day01_secret_entrance/input.txt";
         InputParser parser = new InputParser(file);
 
         parser.parse();

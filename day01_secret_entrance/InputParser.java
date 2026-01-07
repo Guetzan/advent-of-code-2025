@@ -13,7 +13,7 @@ public class InputParser {
     }
 
     public void parse() {
-        try(Scanner inputFile = new Scanner(Paths.get("day01_secret_entrance/input.txt"))) {
+        try(Scanner inputFile = new Scanner(Paths.get(this.filePath))) {
             while(inputFile.hasNextLine()) {
                 String[] row = inputFile.nextLine().split("");
                 
