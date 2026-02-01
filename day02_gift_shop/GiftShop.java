@@ -1,19 +1,13 @@
-/*
-
-1 - separar os ranges em uma lista
-2 - percorrer a lista de ranges
-3 - dentro de cada range, verificar se existe um numero dobrado
-
-*/
-
 import java.util.Arrays;
 
 class GiftShop {
     public static void main(String[] args) {
         String inputPath = "inputs/day02_input.txt";
-        InvalidIdsIdentifier reader = new InvalidIdsIdentifier(inputPath);
+        InvalidIdsIdentifier identifier = new InvalidIdsIdentifier();
 
-        
-        System.out.println("Sum: " + reader.getSumOfInvalidIds());
+        identifier.feedRangesList(inputPath);
+        identifier.detectInvalids();
+
+        System.out.println("Sum: " + identifier.getSumOfInvalidIds());
     }
 }

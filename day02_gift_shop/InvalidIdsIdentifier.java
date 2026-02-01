@@ -4,132 +4,102 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class InvalidIdsIdentifier {
-    private String inputPath;
-    // private ArrayList<Integer> invalidIds;
+    private ArrayList<IdRange> ranges;
+    private ArrayList<Long> invalidIds;
 
-    public InvalidIdsIdentifier(String inputPath) {
-        this.inputPath = inputPath;
-        // this.invalidIds = new ArrayList<>();
+    public InvalidIdsIdentifier() {
+        this.ranges = new ArrayList<>();
+        this.invalidIds = new ArrayList<>();
     }
     
-    public String[] createRangeListFromInputFile() {
-        try(Scanner inputFile = new Scanner(Paths.get(this.inputPath))) {
+    public void feedRangesList(String inputPath) {
+        try(Scanner inputFile = new Scanner(Paths.get(inputPath))) {
             String line = inputFile.nextLine();
-            return line.split(",");
+            String[] ranges = line.split(",");
+
+            for(String range: ranges) {
+                addRange(range);
+            }
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
-
-        return null;
     }
 
-    //retorna um hashmap contendo os limites de um range de ids, ou seja, o menor e o maior id dentro do range passado
-    public HashMap<String, Long> getBoundsOfRange(String range) {
-        String[] splittedRange = range.split("-");
-
-        if(splittedRange.length != 2) {
-            return null;
-        }
-
-        long startID = Long.valueOf(splittedRange[0]);
-        long endID = Long.valueOf(splittedRange[1]);
-
-        HashMap<String, Long> indexes = new HashMap<>();
-        indexes.put("startID", startID);
-        indexes.put("endID", endID);
-
-        return indexes;        
+    public void addRange(String range) {
+        this.ranges.add(new IdRange(range));
     }
 
-    //retorna um hashmap com duas chaves, cada uma contendo uma metade literal do id.
-    //sendo assim, caso receba 113114 como parametro, irá retornar um hashmap {firstHalf=113, secondHalf=114}
-    public HashMap<String, Long> getHalvesOfId(long id) {
-        HashMap<String, Long> idHalves = new HashMap<>();
-        String[] splittedId = String.valueOf(id).split("");
-
-        String firstHalf = "";
-        String secondHalf = "";
-
-        int digitIndex = 0;
-        while(digitIndex < splittedId.length) {
-            String digit = splittedId[digitIndex];
-
-            if(digitIndex < splittedId.length / 2) {
-                firstHalf += digit;
-
-                digitIndex++;
-                continue;
-            }
-
-            if(digitIndex >= splittedId.length / 2) {
-                secondHalf += digit;
-            }
-
-            digitIndex++;
+    public void detectInvalids() {
+        for(IdRange range: this.ranges) {
+           this.invalidIds.addAll(this.getInvalidIdsInRange(range));
         }
-
-        idHalves.put("firstHalf", Long.valueOf(firstHalf));
-        idHalves.put("secondHalf", Long.valueOf(secondHalf));
-
-        return idHalves;
     }
-
-    public boolean isIdIncorrect(long id) {
-        if((String.valueOf(id).length() % 2) != 0) {
-            return false;
-        }
-
-        final HashMap<String, Long> halves = this.getHalvesOfId(id);
-
-        long firstHalf = halves.get("firstHalf");
-        long secondHalf = halves.get("secondHalf");
-
-        if(firstHalf == secondHalf) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public ArrayList<Long> getInvalidIdsInRange(String range) {
+    
+    public ArrayList<Long> getInvalidIdsInRange(IdRange range) {
         ArrayList<Long> invalidIdsInRange = new ArrayList<>();
-        final HashMap<String, Long> indexes = this.getBoundsOfRange(range);
 
-        long startID = indexes.get("startID");
-        long endIndex = indexes.get("endID");
-
-        for(long id = startID; id <= endIndex; id++) {
-            if(this.isIdIncorrect(id)) {
+        final HashMap<String, Long> bounds = range.getRangeBounds();
+        long lowerBound = bounds.get("lowerBound");
+        long upperBound = bounds.get("upperBound");
+        
+        for(long id = lowerBound; id <= upperBound; id++) {
+            if(this.isInvalid(id)) {
                 invalidIdsInRange.add(id);
             }
         }
 
         return invalidIdsInRange;
     }
-
-    public ArrayList<Long> getAllInvalidIdsFromRangeList() {
-        ArrayList<Long> invalidIds = new ArrayList<>();
-        String[] ranges = this.createRangeListFromInputFile();
-
-        for(String range: ranges) {
-            ArrayList<Long> invalidIdsInRange = getInvalidIdsInRange(range);
-            invalidIds.addAll(invalidIdsInRange);
+    
+    public boolean isInvalid(long id) {
+        if(String.valueOf(id).length() % 2 != 0) {
+            return false;
         }
         
-        return invalidIds;
+        long[] halves = this.getIdHalves(id);
+        
+        long firstHalf = halves[0];
+        long secondHalf = halves[1];
+        
+        if(firstHalf == secondHalf) {
+            return true;
+        }
+        
+        return false;
     }
 
-    public long getSumOfInvalidIds() {
-        ArrayList<Long> invalidIds = this.getAllInvalidIdsFromRangeList();
-        System.out.println(invalidIds.toString());
-        long sum = 0;
-
+    public long[] getIdHalves(long id) {
+        String idString = String.valueOf(id);
+        
         int index = 0;
-        while(index < invalidIds.size()) {
-            sum += invalidIds.get(index);
+        
+        String firstHalf = "";
+        while(index < idString.length() / 2) {
+            firstHalf += idString.charAt(index);
+            index++;
+        }
+        
+        String secondHalf = "";
+        while(index <  idString.length()) {
+            secondHalf += idString.charAt(index);
             index++;
         }
 
+        long[] halves = {Long.valueOf(firstHalf), Long.valueOf(secondHalf)};
+        return halves;
+    } 
+
+    public long getSumOfInvalidIds() {
+        if(this.invalidIds.isEmpty()) {
+            return 0;
+        }
+        
+        long sum = 0;
+
+        for(long invalidId: this.invalidIds) {
+            sum += invalidId;
+        }
+        
         return sum;
     }
 }
