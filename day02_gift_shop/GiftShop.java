@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 class GiftShop {
     public static void main(String[] args) {
         String inputPath = "inputs/day02_input.txt";
