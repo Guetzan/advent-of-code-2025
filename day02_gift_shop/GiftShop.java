@@ -4,6 +4,8 @@
 2 - percorrer a lista de ranges
 3 - dentro de cada range, verificar se existe um numero dobrado
 
+
+todo: identificar o erro lógico e corrigir, retornando a soma incorreta.
 */
 
 import java.util.Arrays;
@@ -11,9 +13,9 @@ import java.util.Arrays;
 class GiftShop {
     public static void main(String[] args) {
         String inputPath = "inputs/day02_input.txt";
-        RangesReader reader = new RangesReader(inputPath);
+        InvalidIdsIdentifier reader = new InvalidIdsIdentifier(inputPath);
 
-        String[] ranges = reader.createRangesListFromInputFile();
-        reader.checkForInvalidIdsInRange("1188511880-1188511890");
+        
+        System.out.println("Sum: " + reader.getSumOfInvalidIds());
     }
 }
