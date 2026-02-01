@@ -4,8 +4,6 @@
 2 - percorrer a lista de ranges
 3 - dentro de cada range, verificar se existe um numero dobrado
 
-
-todo: identificar o erro lógico e corrigir, retornando a soma incorreta.
 */
 
 import java.util.Arrays;

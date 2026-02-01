@@ -31,8 +31,8 @@ public class InvalidIdsIdentifier {
             return null;
         }
 
-        Long startID = Long.valueOf(splittedRange[0]);
-        Long endID = Long.valueOf(splittedRange[1]);
+        long startID = Long.valueOf(splittedRange[0]);
+        long endID = Long.valueOf(splittedRange[1]);
 
         HashMap<String, Long> indexes = new HashMap<>();
         indexes.put("startID", startID);
@@ -43,7 +43,7 @@ public class InvalidIdsIdentifier {
 
     //retorna um hashmap com duas chaves, cada uma contendo uma metade literal do id.
     //sendo assim, caso receba 113114 como parametro, irá retornar um hashmap {firstHalf=113, secondHalf=114}
-    public HashMap<String, Long> getHalvesOfId(Long id) {
+    public HashMap<String, Long> getHalvesOfId(long id) {
         HashMap<String, Long> idHalves = new HashMap<>();
         String[] splittedId = String.valueOf(id).split("");
 
@@ -74,15 +74,15 @@ public class InvalidIdsIdentifier {
         return idHalves;
     }
 
-    public boolean isIdIncorrect(Long id) {
-        if(String.valueOf(id).length() % 2 != 0) {
+    public boolean isIdIncorrect(long id) {
+        if((String.valueOf(id).length() % 2) != 0) {
             return false;
         }
 
         final HashMap<String, Long> halves = this.getHalvesOfId(id);
 
-        Long firstHalf = halves.get("firstHalf");
-        Long secondHalf = halves.get("secondHalf");
+        long firstHalf = halves.get("firstHalf");
+        long secondHalf = halves.get("secondHalf");
 
         if(firstHalf == secondHalf) {
             return true;
@@ -95,10 +95,10 @@ public class InvalidIdsIdentifier {
         ArrayList<Long> invalidIdsInRange = new ArrayList<>();
         final HashMap<String, Long> indexes = this.getBoundsOfRange(range);
 
-        Long startID = indexes.get("startID");
-        Long endIndex = indexes.get("endID");
+        long startID = indexes.get("startID");
+        long endIndex = indexes.get("endID");
 
-        for(Long id = startID; id <= endIndex; id++) {
+        for(long id = startID; id <= endIndex; id++) {
             if(this.isIdIncorrect(id)) {
                 invalidIdsInRange.add(id);
             }
@@ -119,9 +119,10 @@ public class InvalidIdsIdentifier {
         return invalidIds;
     }
 
-    public int getSumOfInvalidIds() {
+    public long getSumOfInvalidIds() {
         ArrayList<Long> invalidIds = this.getAllInvalidIdsFromRangeList();
-        int sum = 0;
+        System.out.println(invalidIds.toString());
+        long sum = 0;
 
         int index = 0;
         while(index < invalidIds.size()) {
